@@ -81,3 +81,23 @@ async function addData(links) {
 
 addData(links);
 
+
+// shuffle data
+  async function shuffleDocuments() {
+    client.connect();
+        console.log('Connected to MongoDB');
+
+        const db = client.db(dbName);
+    try {
+      const shuffledData = await db.collection(collectionName).aggregate([
+        { $sample: { size: 10 } } // Sample 10 random documents
+      ]).toArray();
+  
+      console.log(shuffledData); // Now you get the resolved value
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  
+  shuffleDocuments();
+
