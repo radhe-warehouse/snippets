@@ -13,6 +13,29 @@ const client = new MongoClient(uri, {
   }
 });
 
+// function to retrive data
+
+async function retrieveData() {
+    try {
+        await client.connect();
+        console.log('Connected to MongoDB');
+
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        // Retrieve only 'link' field from all documents
+        const data = await collection.find({}, { projection: { link: 1, _id: 0 } }).toArray();
+        vidlinks = data.map(item => item.link);
+        console.log('Retrieved data:', vidlinks);
+    } catch (err) {
+        console.error('Error retrieving data:', err);
+    } finally {
+        await client.close();
+    }
+}
+retrieveData();
+
+
 // Function to update data in MongoDB
 async function updateData(field, input, output) {
     try {
@@ -100,4 +123,6 @@ addData(links);
   }
   
   shuffleDocuments();
+
+
 
